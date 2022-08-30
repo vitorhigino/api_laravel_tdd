@@ -105,8 +105,25 @@ class BooksControllerTest extends TestCase
                 'isbn' => $book['isbn'],
             ])->etc();
         });
+    }
 
+    /**
+     * A basic feature test example.
+     *
+     * @return void
+     */
+    public function test_post_should_validate_create_invalid_book_endpoint()
+    {
+        $response = $this->postJson('/api/books', []);
 
+        $response->assertStatus(422);
+        
+        $response->assertJson(function(AssertableJson $json)
+        {
+            $json->hasAll(['message', 'errors',]);
+
+            $json->where('errors.title.0', 'Este campo é obrigatório.');
+        });
     }
 
     /**
